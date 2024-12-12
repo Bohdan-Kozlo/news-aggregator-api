@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  postgres-db:
+    image: postgres:15
+    container_name: news-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: news_user
+      POSTGRES_PASSWORD: news_password
+      POSTGRES_DB: news_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - news-network
+
+volumes:
+  postgres_data:
+
+networks:
+  news-network:
