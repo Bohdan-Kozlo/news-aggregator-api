@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int            @id @default(autoincrement())
+  username      String
+  email         String         @unique
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  refreshToken  String?
+  password      String
+  comments      Comment[]
+  interests     Interest[]
+  keywords      Keyword[]
+  notifications Notification[]
+  savedArticles SavedArticle[]
+  sources       UserSource[]
+}
+
+model Interest {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  interest  String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Source {
+  id         Int          @id @default(autoincrement())
+  name       String
+  url        String
+  Article    Article[]
+  UserSource UserSource[]
+}
+
+model UserSource {
+  id       Int    @id @default(autoincrement())
+  userId   Int
+  sourceId Int
+  source   Source @relation(fields: [sourceId], references: [id])
+  user     User   @relation(fields: [userId], references: [id])
+}
+
+model Article {
+  id          Int            @id @default(autoincrement())
+  title       String
+  summary     String
+  url         String
+  sourceId    Int
+  publishedAt DateTime
+  source      Source         @relation(fields: [sourceId], references: [id])
+  comments    Comment[]
+  savedBy     SavedArticle[]
+}
+
+model Keyword {
+  id         Int    @id @default(autoincrement())
+  userId     Int
+  keyword    String
+  filterType String @default("include")
+  user       User   @relation(fields: [userId], references: [id])
+}
+
+model SavedArticle {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  articleId Int
+  savedAt   DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  articleId Int
+  content   String
+  createdAt DateTime @default(now())
+  article   Article  @relation(fields: [articleId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  type      String
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
