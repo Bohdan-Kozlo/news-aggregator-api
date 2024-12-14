@@ -26,10 +26,12 @@ export class AuthController {
   @Post('login')
   async login(@Body() loginUser: LoginUserDto, @Res() res: Response) {
     const tokens = await this.authService.login(loginUser);
-    res.cookie('refreshToken', tokens.refreshToken, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    });
+    this.authService.putRefreshTokenToCookie(
+      'refreshToken',
+      tokens.refreshToken,
+      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      res,
+    );
 
     return res.status(200).json({ accessToken: tokens.accessToken });
   }
@@ -37,7 +39,7 @@ export class AuthController {
   @UseGuards(AccessAuthGuard)
   @Post('logout')
   async logout(@Res() res: Response, @CurrentUser() user: any) {
-    res.clearCookie('refreshToken');
+    this.authService.clearCookie('refreshToken', res);
     await this.authService.logout(user.userId);
     return res.sendStatus(200);
   }
@@ -46,10 +48,12 @@ export class AuthController {
   @Post('refresh')
   async refreshTokens(@CurrentUser() user: any, @Res() res: Response) {
     const newTokens = await this.authService.refreshTokens(user.userId);
-    res.cookie('refreshToken', newTokens.refreshToken, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    });
+    this.authService.putRefreshTokenToCookie(
+      'refreshToken',
+      newTokens.refreshToken,
+      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      res,
+    );
 
     return res.status(200).json({ accessToken: newTokens.accessToken });
   }

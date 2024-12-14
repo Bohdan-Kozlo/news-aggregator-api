@@ -5,6 +5,7 @@ import { CommentsModule } from './comments/comments.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { AuthModule } from './auth/auth.module';
 import { PrismaModule } from './common/prisma/prisma.module';
+import { PreferencesModule } from './preferences/preferences.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { PrismaModule } from './common/prisma/prisma.module';
     NotificationsModule,
     AuthModule,
     PrismaModule,
+    PreferencesModule,
   ],
   controllers: [],
   providers: [],

@@ -7,6 +7,7 @@ import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { SignUpUserDto } from './dto/SignUpUser.dto';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -68,6 +69,22 @@ export class AuthService {
 
   async logout(userId: string) {
     return this.usersService.deleteRefreshToken(+userId);
+  }
+
+  putRefreshTokenToCookie(
+    keyName: string,
+    refreshToken: string,
+    expiresDate: Date,
+    res: Response,
+  ) {
+    res.cookie(keyName, refreshToken, {
+      httpOnly: true,
+      expires: expiresDate,
+    });
+  }
+
+  clearCookie(keyName: string, res: Response) {
+    res.clearCookie(keyName);
   }
 
   private async generateTokens(userId: number, email: string) {

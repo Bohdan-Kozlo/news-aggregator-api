@@ -63,8 +63,13 @@ model Keyword {
   id         Int    @id @default(autoincrement())
   userId     Int
   keyword    String
-  filterType String @default("include")
+  filterType FilterType @default(INCLUDE)
   user       User   @relation(fields: [userId], references: [id])
+}
+
+enum FilterType {
+  INCLUDE
+  EXCLUDE
 }
 
 model SavedArticle {
