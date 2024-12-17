@@ -5,6 +5,7 @@ import * as process from 'node:process';
 import { AccessTokenStrategy } from './strategies/access-token.strategy';
 import { RefreshTokenStrategy } from './strategies/refresh-token.strategy';
 import { UsersModule } from '../users/users.module';
+import { AuthController } from './auth.controller';
 
 @Module({
   imports: [
@@ -15,5 +16,6 @@ import { UsersModule } from '../users/users.module';
     UsersModule,
   ],
   providers: [AuthService, AccessTokenStrategy, RefreshTokenStrategy],
+  controllers: [AuthController],
 })
 export class AuthModule {}

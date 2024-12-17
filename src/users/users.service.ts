@@ -9,7 +9,9 @@ export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async findByEmail(email: string) {
-    return this.prismaService.user.findUnique({ where: { email } });
+    return this.prismaService.user.findUnique({
+      where: { email },
+    });
   }
 
   async create(signUpUser: SignUpUserDto) {
@@ -19,12 +21,19 @@ export class UsersService {
   async findById(id: number) {
     return this.prismaService.user.findUnique({
       where: { id },
-      select: { password: false, refreshToken: false },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+      },
     });
   }
 
   async updateUser(userId: number, updateProfileDto: UpdateProfileDto) {
-    if (updateProfileDto.password) {
+    console.log(updateProfileDto);
+    if (updateProfileDto?.password) {
       return this.prismaService.user.update({
         where: { id: userId },
         data: {

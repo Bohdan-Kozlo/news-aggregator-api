@@ -20,7 +20,7 @@ export class RefreshTokenStrategy extends PassportStrategy(
           return data;
         },
       ]),
-      secretOrKey: process.env.REFRESH_SECRET_KEY || 'secret',
+      secretOrKey: process.env.JWT_SECRET || 'secret',
     });
   }
 

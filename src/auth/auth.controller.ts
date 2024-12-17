@@ -14,13 +14,15 @@ export class AuthController {
   @Post('signup')
   async singup(@Body() signUpUser: SignUpUserDto, @Res() res: Response) {
     const { user, tokens } = await this.authService.signUp(signUpUser);
-    res.cookie('refreshToken', tokens.refreshToken, {
-      httpOnly: true,
-      expires: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-    });
+    this.authService.putRefreshTokenToCookie(
+      'refreshToken',
+      tokens.refreshToken,
+      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+      res,
+    );
     return res
       .status(201)
-      .json({ userId: user.id, refreshToken: tokens.refreshToken });
+      .json({ userId: user.id, accessToken: tokens.accessToken });
   }
 
   @Post('login')
@@ -48,13 +50,7 @@ export class AuthController {
   @Post('refresh')
   async refreshTokens(@CurrentUser() user: any, @Res() res: Response) {
     const newTokens = await this.authService.refreshTokens(user.userId);
-    this.authService.putRefreshTokenToCookie(
-      'refreshToken',
-      newTokens.refreshToken,
-      new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-      res,
-    );
 
-    return res.status(200).json({ accessToken: newTokens.accessToken });
+    return res.status(200).json({ accessToken: newTokens });
   }
 }

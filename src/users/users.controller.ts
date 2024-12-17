@@ -1,9 +1,19 @@
-import { Controller, Get, HttpCode, HttpStatus, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Put,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
 import { UpdateProfileDto } from './dto/update-profile.dto';
+import { AccessAuthGuard } from '../common/guards/access-auth.guard';
 
 @Controller('users')
+@UseGuards(AccessAuthGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -14,7 +24,10 @@ export class UsersController {
 
   @Put('/profile')
   @HttpCode(HttpStatus.OK)
-  async updateProfile(@CurrentUser() user: any, updateProfileDto: UpdateProfileDto) {
+  async updateProfile(
+    @CurrentUser() user: any,
+    @Body() updateProfileDto: UpdateProfileDto,
+  ) {
     await this.usersService.updateUser(user.userId, updateProfileDto);
     return;
   }
