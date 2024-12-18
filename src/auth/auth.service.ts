@@ -30,10 +30,6 @@ export class AuthService {
       throw new UnauthorizedException('Email or Password is incorrect');
     }
     const tokens = await this.generateTokens(validUser.id, validUser.password);
-    await this.usersService.updateRefreshTokens(
-      validUser.id,
-      validUser.refreshToken,
-    );
     return tokens;
   }
 
@@ -56,17 +52,13 @@ export class AuthService {
   }
 
   async refreshTokens(userId: string) {
-    const user = await this.usersService.findByEmail(userId);
+    const user = await this.usersService.findById(+userId);
     if (!user) {
       throw new UnauthorizedException('Invalid refresh token');
     }
 
     const tokens = await this.generateTokens(+userId, user.email);
     return tokens.refreshToken;
-  }
-
-  async logout(userId: string) {
-    return this.usersService.deleteRefreshToken(+userId);
   }
 
   putRefreshTokenToCookie(

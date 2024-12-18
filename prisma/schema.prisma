@@ -13,13 +13,12 @@ model User {
   email         String         @unique
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
-  refreshToken  String?
   password      String
   comments      Comment[]
   interests     Interest[]
   keywords      Keyword[]
   notifications Notification[]
-  savedArticles SavedArticle[]
+  savedArticles      SavedArticle[]
   sources       UserSource[]
 }
 
@@ -33,9 +32,9 @@ model Interest {
 
 model Source {
   id         Int          @id @default(autoincrement())
-  name       String
-  url        String
-  Article    Article[]
+  name       String       @unique
+  url String
+  savedArticles    SavedArticle[]
   UserSource UserSource[]
 }
 
@@ -47,16 +46,17 @@ model UserSource {
   user     User   @relation(fields: [userId], references: [id])
 }
 
-model Article {
+model SavedArticle {
   id          Int            @id @default(autoincrement())
-  title       String
-  summary     String
-  url         String
+  title       String?
+  summary     String?
+  url         String @unique
   sourceId    Int
-  publishedAt DateTime
+  publishedAt DateTime       @default(now())
+  userId      Int
+  user        User           @relation(fields: [userId], references: [id])
   source      Source         @relation(fields: [sourceId], references: [id])
   comments    Comment[]
-  savedBy     SavedArticle[]
 }
 
 model Keyword {
@@ -72,14 +72,6 @@ enum FilterType {
   EXCLUDE
 }
 
-model SavedArticle {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  articleId Int
-  savedAt   DateTime @default(now())
-  article   Article  @relation(fields: [articleId], references: [id])
-  user      User     @relation(fields: [userId], references: [id])
-}
 
 model Comment {
   id        Int      @id @default(autoincrement())
@@ -87,7 +79,7 @@ model Comment {
   articleId Int
   content   String
   createdAt DateTime @default(now())
-  article   Article  @relation(fields: [articleId], references: [id])
+  article   SavedArticle  @relation(fields: [articleId], references: [id])
   user      User     @relation(fields: [userId], references: [id])
 }
 

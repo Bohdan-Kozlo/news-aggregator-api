@@ -60,4 +60,36 @@ export class PreferencesService {
 
     return { message: 'Keywords added successfully' };
   }
+
+  async getPreferences(userId: number) {
+    const user = await this.prismaService.user.findUnique({
+      where: { id: userId },
+      include: {
+        interests: true,
+        keywords: true,
+        sources: {
+          include: {
+            source: true,
+          },
+        },
+      },
+    });
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    return {
+      interests: user.interests.map((interest) => interest.interest),
+      sources: user.sources.map((userSource) => ({
+        id: userSource.source.id,
+        name: userSource.source.name,
+        url: userSource.source.url,
+      })),
+      keywords: user.keywords.map((keyword) => ({
+        keyword: keyword.keyword,
+        filterType: keyword.filterType,
+      })),
+    };
+  }
 }

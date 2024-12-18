@@ -1,4 +1,4 @@
-import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { PreferencesService } from './preferences.service';
 import { AccessAuthGuard } from '../common/guards/access-auth.guard';
 import { CurrentUser } from '../common/decorators/current-user.decorator';
@@ -22,13 +22,18 @@ export class PreferencesController {
   @Post('sources')
   async setSources(
     @CurrentUser() user: any,
-    createSourcesDto: CreateSourcesDto,
+    @Body() createSourcesDto: CreateSourcesDto,
   ) {
     return this.preferencesService.setSources(user.userId, createSourcesDto);
   }
 
   @Post('keywords')
-  async addKeywords(@CurrentUser() user: any, keywordDto: CreateKeywordsDto) {
+  async addKeywords(@CurrentUser() user: any, @Body() keywordDto: CreateKeywordsDto) {
     return this.preferencesService.addKeywords(user.userId, keywordDto);
+  }
+
+  @Get()
+  async getPreferences(@CurrentUser() user: any) {
+    return this.preferencesService.getPreferences(user.userId);
   }
 }

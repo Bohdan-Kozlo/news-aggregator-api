@@ -48,18 +48,4 @@ export class UsersService {
       data: updateProfileDto,
     });
   }
-
-  async updateRefreshTokens(userId: number, refreshToken: string) {
-    return this.prismaService.user.update({
-      where: { id: +userId },
-      data: { refreshToken: refreshToken },
-    });
-  }
-
-  async deleteRefreshToken(userId: number) {
-    return this.prismaService.user.update({
-      where: { id: userId },
-      data: { refreshToken: null },
-    });
-  }
 }

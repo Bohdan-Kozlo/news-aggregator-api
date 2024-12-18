@@ -14,9 +14,19 @@ services:
       - postgres_data:/var/lib/postgresql/data
     networks:
       - news-network
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - '6379:6379'
+    volumes:
+      - redis_data:/data
+    networks:
+      - news-network
 
 volumes:
   postgres_data:
+  redis_data:
 
 networks:
   news-network:
