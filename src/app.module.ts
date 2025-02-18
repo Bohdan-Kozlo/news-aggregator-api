@@ -8,8 +8,10 @@ import { PrismaModule } from './common/prisma/prisma.module';
 import { PreferencesModule } from './preferences/preferences.module';
 import { RedisModule } from '@nestjs-modules/ioredis';
 import * as process from 'node:process';
-import { HttpModule } from '@nestjs/axios';
 import { ShareModule } from './share/share.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
+import * as path from 'node:path';
 
 @Module({
   imports: [
@@ -23,6 +25,25 @@ import { ShareModule } from './share/share.module';
     RedisModule.forRoot({
       type: 'single',
       url: process.env.REDIS_URL,
+    }),
+    MailerModule.forRoot({
+      transport: {
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      },
+      defaults: {
+        from: process.env.EMAIL_FROM || '"No Reply" <no-reply@gmail.com>',
+      },
+      template: {
+        dir: path.join(__dirname, '../templates/email'),
+        adapter: new HandlebarsAdapter(),
+        options: {
+          strict: true,
+        },
+      },
     }),
     ShareModule,
   ],

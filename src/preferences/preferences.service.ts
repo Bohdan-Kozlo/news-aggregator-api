@@ -49,7 +49,7 @@ export class PreferencesService {
   async addKeywords(userId: number, keywordDto: CreateKeywordsDto) {
     const keywordRecords = keywordDto.keywords.map((keyword) => ({
       userId,
-      keyword,
+      keyword: keyword.keyword,
       filterType: keywordDto.filterType,
     }));
 

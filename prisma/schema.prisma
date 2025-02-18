@@ -90,4 +90,5 @@ model Notification {
   enabled   Boolean  @default(true)
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
+  @@unique([userId, type])
 }

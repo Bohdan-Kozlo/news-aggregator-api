@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    .email-container {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background: #ffffff;
+      border: 1px solid #dddddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    h1 {
+      font-size: 24px;
+      color: #333;
+      text-align: center;
+    }
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+    li {
+      margin: 10px 0;
+    }
+    a {
+      color: #1a73e8;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+    }
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 12px;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+<div class="email-container">
+  <h1>Your Daily News Digest</h1>
+  <p>Hello {{username}},</p>
+  <p>Here are your top articles for today:</p>
+  <ul>
+    {{#each articles}}
+      <li>
+        <strong>{{this.title}}</strong><br>
+        <a href="{{this.url}}" target="_blank">Read full article</a>
+      </li>
+    {{/each}}
+  </ul>
+  <p class="footer">Stay informed with News Aggregator!</p>
+</div>
+</body>
+</html>

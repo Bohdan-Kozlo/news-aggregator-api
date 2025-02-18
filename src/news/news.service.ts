@@ -69,7 +69,7 @@ export class NewsService {
     return filteredNews;
   }
 
-  private async fetchNewsFromAPI(
+  async fetchNewsFromAPI(
     categories: string | null,
     sources: string | null,
     page: number,
